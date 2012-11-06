@@ -91,7 +91,7 @@ Details
 
 All the commands read the line your cursor is on. If you have cursors all over the place, it probably just picks the first one. After writing things it will move the cursor to the end of what it wrote. If you put a `|` somewhere in a line, everything from there till the end of the line will be ignored.
 
-`lambda_expand` is pretty much just copypasting. It will add parentheses to make sure the named things won't get mixed up with their surroundings, but it won't deal with scoping. If your named things have free variables, you can capture those. And if you're using the name of a named thing as a bound variable, than will not keep it from getting replaced by that thing.
+`lambda_expand` is pretty much just copypasting. It will add parentheses to make sure the named things won't get mixed up with their surroundings, but it won't deal with scoping. If your named things have free variables, you can capture those. And if you're using the name of a named thing as a bound variable, that will not keep it from getting replaced by that thing.
 
 `beta_reduce_lots` stops if nothing can be reduced. Or if it has printed like a thousand lines.
 
