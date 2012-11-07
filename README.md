@@ -1,15 +1,17 @@
 Lambda Things for Sublime Text 2
-==================================
+================================
+
+Lets you write untyped lambda calculus-expressions in Sublime Text 2 and do lambda calculus-things to them. Useful.
 
 Setup
 -----
 
 Somethingsomethinginstall. And then you maybe want to make some keys do some of the lambdathings. Me, personally, for myself, I have put this in one .sublime-keymap or another:
 
-    { "keys": ["ctrl+shift+x"], "command": "beta_reduce" },
-	{ "keys": ["ctrl+shift+c"], "command": "beta_reduce_lots" },
-	{ "keys": ["ctrl+shift+r"], "command": "lambda_expand" },
-	{ "keys": ["ctrl+l"], "command": "insert", "args": {"characters": "λ"} },
+    { "keys": ["ctrl+shift+x"], "command": "lambda_reduce" },
+    { "keys": ["ctrl+shift+c"], "command": "lambda_reduce_lots" },
+    { "keys": ["ctrl+shift+r"], "command": "lambda_replace_names" },
+    { "keys": ["ctrl+l"], "command": "insert", "args": {"characters": "λ"} },
 
 I'm sure this collides horribly with all the keybindings real Sublime people use and you absolutely should not use those keys. But you maybe should use those commands, because those are the commands.
 
@@ -20,11 +22,11 @@ Now you can write great things like
 
     (λa.λb.a (b (λn.λf.λx.f (n f x))) (λf.λx.x)) (λf.λx.f (f (f x))) (λf.λx.f (f x))
 
-, run `beta_reduce` (`ctrl+shift+x`, or *something*), and it will put
+, and run `lambda_reduce` (`ctrl+shift+x`, or *something*) to du beta reduction. That will make it put
 
     (λb.(λf.λx.f (f (f x))) (b (λn.λf.λx.f (n f x))) (λf.λx.x)) (λf.λx.f (f x))
 
-on the next line. If you get tired of doing `beta_reduce` over and over and wanna do beta reduce like a lot, you can do `beta_reduce_lots` (`ctrl+shift+c`):
+on the next line. If you get tired of doing `lambda_reduce` over and over and wanna do beta reduce like a lot, you can do `lambda_reduce_lots` (`ctrl+shift+c`):
 
 
     (λf.λx.f (f (f x))) ((λf.λx.f (f x)) (λn.λf.λx.f (n f x))) (λf.λx.x)
@@ -69,7 +71,7 @@ You have to substitute the things for the names before beta-reducing the things.
 
     succ (succ 0)
 
-you can do `lambda_expand` (`ctrl+shift+r`) and it will put
+you can do `lambda_replace_names` (`ctrl+shift+r`) and it will put
 
     (λn.λf.λx.f (n f x)) ((λn.λf.λx.f (n f x)) (λf.λx.x))
 
@@ -91,9 +93,9 @@ Details
 
 All the commands read the line your cursor is on. If you have cursors all over the place, it probably just picks the first one. After writing things it will move the cursor to the end of what it wrote. If you put a `|` somewhere in a line, everything from there till the end of the line will be ignored.
 
-`lambda_expand` is pretty much just copypasting. It will add parentheses to make sure the named things won't get mixed up with their surroundings, but it won't deal with scoping. If your named things have free variables, you can capture those. And if you're using the name of a named thing as a bound variable, that will not keep it from getting replaced by that thing.
+`lambda_replace_names` is pretty much just copypasting. It will add parentheses to make sure the named things won't get mixed up with their surroundings, but it won't deal with scoping. If your named things have free variables, you can capture those. And if you're using the name of a named thing as a bound variable, that will not keep it from getting replaced by that thing.
 
-`beta_reduce_lots` stops if nothing can be reduced. Or if it has printed like a thousand lines.
+`lambda_reduce_lots` stops if nothing can be reduced. Or if it has printed like a thousand lines.
 
 Variables will sometimes be renamed in order to avoid naming conflicts/crazy scoping. That's going to look like so:
 

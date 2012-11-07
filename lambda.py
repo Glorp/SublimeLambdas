@@ -1,6 +1,6 @@
 import sublime, sublime_plugin
 
-class BetaReduceCommand(sublime_plugin.TextCommand):
+class LambdaReduceCommand(sublime_plugin.TextCommand):
     def run(self, edit):
         line = self.view.line(self.view.sel()[0].begin());
         expression = parse(self.view.substr(line))
@@ -14,7 +14,7 @@ class BetaReduceCommand(sublime_plugin.TextCommand):
         self.view.sel().add(sublime.Region(p))
         self.view.show(p)
 
-class BetaReduceLotsCommand(sublime_plugin.TextCommand):
+class LambdaReduceLotsCommand(sublime_plugin.TextCommand):
     def run(self, edit):
         line = self.view.line(self.view.sel()[0].begin());
         expression = parse(self.view.substr(line))
@@ -33,7 +33,7 @@ class BetaReduceLotsCommand(sublime_plugin.TextCommand):
         self.view.show(p)
     
 
-class LambdaExpandCommand(sublime_plugin.TextCommand):
+class LambdaReplaceNamesCommand(sublime_plugin.TextCommand):
     def run(self, edit):
         defs = makeDefinitions(self.view)
         line = self.view.line(self.view.sel()[0].begin());
