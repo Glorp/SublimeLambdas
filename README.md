@@ -6,7 +6,9 @@ Lets you write untyped lambda calculus-expressions in Sublime Text 2 and do lamb
 Setup
 -----
 
-Somethingsomethinginstall. And then you maybe want to make some keys do some of the lambdathings. Me, personally, for myself, I have put this in one .sublime-keymap or another:
+Get lambda.py and put it somewhere. (some Sublime place)/Packages/User/ seems fine.
+
+And then you maybe want to make some keys do some of the lambdathings. Me, personally, for myself, I have put this in one .sublime-keymap or another:
 
     { "keys": ["ctrl+shift+x"], "command": "lambda_reduce" },
     { "keys": ["ctrl+shift+c"], "command": "lambda_reduce_lots" },
@@ -84,7 +86,7 @@ on the next line. And then you can reduce things from there:
     λf.λx.f (f ((λx.x) x))
     λf.λx.f (f x)
 
-If your second most favourite number is two, you're starting to like this.
+Is two!
 
 There are some names and things [here](https://gist.github.com/4026290).
 
