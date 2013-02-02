@@ -1,7 +1,7 @@
-Lambda Things for Sublime Text 2
+Lambda Things for Sublime Text 3
 ================================
 
-Lets you write untyped lambda calculus-expressions in Sublime Text 2 and do lambda calculus-things to them. Useful.
+Lets you write untyped lambda calculus-expressions in Sublime Text 3 and do lambda calculus-things to them. Useful.
 
 Setup
 -----

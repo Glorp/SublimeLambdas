@@ -9,7 +9,8 @@ class LambdaReduceCommand(sublime_plugin.TextCommand):
         if res is None:
             res = expression
         p = line.end()
-        p = p + self.view.insert(edit, line.end(), s + u"\n" + res.__unicode__())
+        self.view.insert(edit, p, s + "\n" + res.__str__())
+        p = self.view.line(p + 1).end()
         self.view.sel().clear()
         self.view.sel().add(sublime.Region(p))
         self.view.show(p)
@@ -19,7 +20,7 @@ class LambdaReduceLotsCommand(sublime_plugin.TextCommand):
         line = self.view.line(self.view.sel()[0].begin());
         expression = parse(self.view.substr(line))
         allNames = expression.allNames()
-        res = u""
+        res = ""
         i = 0
         p = line.end()
         while True:
@@ -27,7 +28,8 @@ class LambdaReduceLotsCommand(sublime_plugin.TextCommand):
             i = i + 1
             if expression is None or i == 1000:
                 break
-            p = p + self.view.insert(edit, p, s + u"\n" + expression.__unicode__())
+            self.view.insert(edit, p, s + "\n" + expression.__str__())
+            p = self.view.line(p + 1).end()
         self.view.sel().clear()
         self.view.sel().add(sublime.Region(p))
         self.view.show(p)
@@ -39,7 +41,7 @@ class LambdaReplaceNamesCommand(sublime_plugin.TextCommand):
         line = self.view.line(self.view.sel()[0].begin());
         expression = parse(self.view.substr(line), defs)
         p = line.end()
-        p = p + self.view.insert(edit, p, u"\n" + expression.__unicode__())
+        p = p + self.view.insert(edit, p, "\n" + expression.__str__())
         self.view.sel().clear()
         self.view.sel().add(sublime.Region(p))
         self.view.show(p)
@@ -48,28 +50,28 @@ def reduceOrRename(expression):
     allNames = expression.allNames()
     reducible = expression.find(lambda x: x.isReducible())
     if reducible is None:
-        return None, u""
+        return None, ""
     s = expression.followPath(reducible).findConflict()
     if s is None:
-        return expression.followPathThen(reducible, lambda x: x.betaReduce()), u""
+        return expression.followPathThen(reducible, lambda x: x.betaReduce()), ""
     scope = expression.findScope(reducible, s)
     newName = uniqueName(s, allNames)
     if scope is None:
         expression = expression.replace(s, Symbol(newName))
     else:
         expression = expression.rename(s, newName, scope)
-    return expression, u" | " + s + u" -> " + newName
+    return expression, " | " + s + " -> " + newName
                 
 
 def withParens(s):
-    return u"(" + s + u")"
+    return "(" + s + ")"
 
 def makeDefinitions(view):
     res = {}
-    lines = view.find_all(u":=")
+    lines = view.find_all(":=")
     for region in lines:
         line = view.substr(view.line(region.begin()))
-        x = line.partition(u":=")
+        x = line.partition(":=")
         name = x[0].strip()
         res[name] = parse(x[2], res)
     return res
@@ -113,7 +115,7 @@ class Term:
     def replace(self, old, new, scope = []):
         return self.followPathThen(scope, lambda x: x.privReplace(old, new))
     def privReplace(self, old, new):
-        children = map(lambda x: x.privReplace(old, new), self.children())
+        children = list(map(lambda x: x.privReplace(old, new), self.children()))
         return self.__class__(*self.parameters() + children)
     def rename(self, old, new, scope):
         return self.followPathThen(scope, lambda x: x.privRename(old, new))
@@ -169,10 +171,10 @@ class Lambda(Term):
     def __init__(self, param, term):
         self.param = param
         self.term = term
-    def __unicode__(self):
-        return u"\u03bb" + self.param + u"." + self.term.__unicode__()
+    def __str__(self):
+        return "λ" + self.param + "." + self.term.__str__()
     def lispy(self):
-        return u"(\u03bb " + self.param + u" " + self.term.lispy() + u")"
+        return "λ " + self.param + " " + self.term.lispy() + ")"
     def parameters(self):
         return [self.param]
     def children(self):
@@ -204,14 +206,14 @@ class Application(Term):
     def __init__(self, term1, term2):
         self.term1 = term1
         self.term2 = term2
-    def __unicode__(self):
-        s1 = self.term1.__unicode__()
+    def __str__(self):
+        s1 = self.term1.__str__()
         if isinstance(self.term1, Lambda):
             s1 = withParens(s1)
-        s2 = self.term2.__unicode__()
+        s2 = self.term2.__str__()
         if isinstance(self.term2, Lambda) or isinstance(self.term2, Application):
             s2 = withParens(s2)
-        return s1 + u" " + s2
+        return s1 + " " + s2
     def lispy(self):
         return "(apply " + self.term1.lispy() + " " + self.term2.lispy() + ")"
     def children(self):
@@ -226,10 +228,8 @@ class Application(Term):
 
 class Symbol(Term):
     def __init__(self, name):
-        if not isinstance(name, unicode):
-            raise "eep"
         self.name = name
-    def __unicode__(self):
+    def __str__(self):
         return self.name
     def lispy(self):
         return self.name
@@ -270,7 +270,7 @@ class Parser:
             return False
         
     def readTerm(self):
-        if self.c == u'\u03bb':
+        if self.c == 'λ':
             self.readNext()
             return self.readLambda()
         elif self.c == '(':
@@ -291,7 +291,7 @@ class Parser:
         while self.c is not None and self.c != ' ':
             self.readNext()
         name = self.s[start:self.i]
-        if self.defs.has_key(name):
+        if name in self.defs:
             return self.defs[name]
         return Symbol(name)
 
