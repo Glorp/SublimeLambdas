@@ -3,6 +3,8 @@ Lambda Things for Sublime Text 3
 
 Lets you write untyped lambda calculus-expressions in Sublime Text 3 and do lambda calculus-things to them. Useful.
 
+(for Sublime Text 2, goto [here](https://github.com/Glorp/SublimeLambdas/tree/ST2))
+
 Setup
 -----
 
