@@ -9,8 +9,9 @@ class LambdaReduceCommand(sublime_plugin.TextCommand):
         if res is None:
             res = expression
         p = line.end()
-        self.view.insert(edit, p, s + "\n" + res.__str__())
-        p = self.view.line(p + 1).end()
+        resstring = s + "\n" + res.__str__()
+        self.view.insert(edit, p, resstring)
+        p = p + len(resstring)
         self.view.sel().clear()
         self.view.sel().add(sublime.Region(p))
         self.view.show(p)
@@ -28,12 +29,12 @@ class LambdaReduceLotsCommand(sublime_plugin.TextCommand):
             i = i + 1
             if expression is None or i == 1000:
                 break
-            self.view.insert(edit, p, s + "\n" + expression.__str__())
-            p = self.view.line(p + 1).end()
+            resstring = s + "\n" + expression.__str__()
+            self.view.insert(edit, p, resstring)
+            p = p + len(resstring)
         self.view.sel().clear()
         self.view.sel().add(sublime.Region(p))
-        self.view.show(p)
-    
+        self.view.show(p)    
 
 class LambdaReplaceNamesCommand(sublime_plugin.TextCommand):
     def run(self, edit):
